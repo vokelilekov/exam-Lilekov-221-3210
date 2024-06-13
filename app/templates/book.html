@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">{{ book.title }}</h1>
+<img src="{{ url_for('media', filename=book.cover.filename) }}" class="img-fluid" alt="{{ book.title }}">
+<p><strong>Автор:</strong> {{ book.author }}</p>
+<p><strong>Издатель:</strong> {{ book.publisher }}</p>
+<p><strong>Год:</strong> {{ book.year }}</p>
+<p><strong>Жанры:</strong>
+    {% for genre in book.genres %}
+        {{ genre.name }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+</p>
+<p><strong>Страниц:</strong> {{ book.pages }}</p>
+<p><strong>Описание:</strong> {{ book.description|safe }}</p>
+
+<h2>Рецензии</h2>
+<ul class="list-group">
+    {% for review in reviews %}
+        <li class="list-group-item">
+            <strong>{{ review.user.username }}:</strong> {{ review.rating }}<br>
+            {{ review.text|safe }}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if current_user.is_authenticated %}
+    {% if user_review %}
+        <h3>Ваша рецензия</h3>
+        <div class="card mt-3">
+            <div class="card-body">
+                <p><strong>Оценка:</strong> {{ user_review.rating }}</p>
+                <p>{{ user_review.text|safe }}</p>
+            </div>
+        </div>
+    {% else %}
+        <a href="{{ url_for('main.add_review', book_id=book.id) }}" class="btn btn-primary mt-3">Написать рецензию</a>
+    {% endif %}
+{% endif %}
+{% endblock %}

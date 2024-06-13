@@ -21,7 +21,7 @@ def create_app():
 
     @app.route('/media/<path:filename>')
     def media(filename):
-        return send_from_directory(app.config['UPLOADED_PHOTOS_DEST'], filename)
+        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
     return app
 
