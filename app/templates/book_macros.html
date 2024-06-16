@@ -1,0 +1,46 @@
+{% macro render_book_form(book=None, genres=None, selected_genres=None, show_cover_field=True) %}
+<div class="mb-3">
+    <label for="title" class="form-label">Название</label>
+    <input type="text" id="title" name="title" class="form-control" value="{{ book.title if book else '' }}" required>
+</div>
+<div class="mb-3">
+    <label for="description" class="form-label">Описание</label>
+    <textarea id="description" name="description" class="form-control">{{ book.description if book else '' }}</textarea>
+</div>
+<div class="mb-3">
+    <label for="year" class="form-label">Год</label>
+    <input type="number" id="year" name="year" class="form-control" value="{{ book.year if book else '' }}" required>
+</div>
+<div class="mb-3">
+    <label for="publisher" class="form-label">Издательство</label>
+    <input type="text" id="publisher" name="publisher" class="form-control" value="{{ book.publisher if book else '' }}"
+        required>
+</div>
+<div class="mb-3">
+    <label for="author" class="form-label">Автор</label>
+    <input type="text" id="author" name="author" class="form-control" value="{{ book.author if book else '' }}"
+        required>
+</div>
+<div class="mb-3">
+    <label for="pages" class="form-label">Страниц</label>
+    <input type="number" id="pages" name="pages" class="form-control" value="{{ book.pages if book else '' }}" required>
+</div>
+<div class="mb-3">
+    <label for="genres" class="form-label">Жанры</label>
+    <select id="genres" name="genres" class="form-select" multiple required>
+        {% for genre in genres %}
+        <option value="{{ genre.id }}" {% if selected_genres and genre.id in selected_genres %}selected{% endif %}>{{
+            genre.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% if show_cover_field %}
+<div class="mb-3">
+    <label for="cover" class="form-label">Обложка</label>
+    <input type="file" id="cover" name="cover" class="form-control">
+</div>
+{% endif %}
+<div class="mb-3">
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</div>
+{% endmacro %}

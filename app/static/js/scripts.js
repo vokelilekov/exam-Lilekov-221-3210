@@ -2,16 +2,29 @@
 
 function fillModal(event) {
     let deleteUrl = event.relatedTarget.dataset.deleteUrl;
-    let bookTitle = event.relatedTarget.dataset.bookTitle;
-
     let modalForm = event.target.querySelector("form");
     modalForm.action = deleteUrl;
+}
 
-    let modalTitle = event.target.querySelector("#bookTitle");
-    modalTitle.textContent = bookTitle;
+function bookName(event) {
+    let bookName = event.relatedTarget.dataset.bookName;
+    document.getElementById("book-name").textContent = bookName;
 }
 
 window.onload = function () {
-    let deleteModal = document.getElementById("deleteModal");
+    let deleteModal = document.getElementById("delete-modal");
+    
+    var easyMDE = new EasyMDE({
+        element: document.getElementById('description'),
+    });
+   
+    var easyMDE = new EasyMDE({
+        element: document.getElementById('text'),
+    });
     deleteModal.addEventListener("show.bs.modal", fillModal);
-}
+    deleteModal.addEventListener("show.bs.modal", bookName);
+
+
+
+};
+

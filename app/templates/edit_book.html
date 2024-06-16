@@ -1,41 +1,11 @@
 {% extends "base.html" %}
+{% import "book_macros.html" as macros %}
 
 {% block title %}Редактировать книгу{% endblock %}
 
 {% block content %}
 <h1 class="mt-4">Редактировать книгу</h1>
 <form method="post">
-    {{ form.hidden_tag() }}
-    <div class="mb-3">
-        {{ form.title.label(class="form-label") }}
-        {{ form.title(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.description.label(class="form-label") }}
-        {{ form.description(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.year.label(class="form-label") }}
-        {{ form.year(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.publisher.label(class="form-label") }}
-        {{ form.publisher(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.author.label(class="form-label") }}
-        {{ form.author(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.pages.label(class="form-label") }}
-        {{ form.pages(class="form-control") }}
-    </div>
-    <div class="mb-3">
-        {{ form.genres.label(class="form-label") }}
-        {{ form.genres(class="form-select") }}
-    </div>
-    <div class="mb-3">
-        {{ form.submit(class="btn btn-primary") }}
-    </div>
+    {{ macros.render_book_form(book=book, genres=genres, selected_genres=selected_genres, show_cover_field=False) }}
 </form>
 {% endblock %}

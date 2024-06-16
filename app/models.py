@@ -3,7 +3,6 @@ from typing import List, Optional
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.orm import joinedload
 
 db = SQLAlchemy()
 
@@ -37,10 +36,10 @@ class Book(db.Model):
 class Cover(db.Model):
     __tablename__ = 'covers'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.String(36), primary_key=True)
     filename = db.Column(db.String(200), nullable=False)
     mime_type = db.Column(db.String(50), nullable=False)
-    md5_hash = db.Column(db.String(32), nullable=False)
+    md5_hash = db.Column(db.String(32), nullable=False, unique=True)
 
     books = db.relationship("Book", back_populates="cover")
 

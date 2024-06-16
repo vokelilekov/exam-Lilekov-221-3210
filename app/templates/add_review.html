@@ -1,21 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}Написать рецензию{% endblock %}
+{% block title %}Добавить рецензию{% endblock %}
 
 {% block content %}
-<h1 class="mt-4">Написать рецензию на {{ book.title }}</h1>
+<h1 class="mt-4">Добавить рецензию</h1>
 <form method="post">
-    {{ form.hidden_tag() }}
     <div class="mb-3">
-        {{ form.rating.label(class="form-label") }}
-        {{ form.rating(class="form-control") }}
+        <label for="rating" class="form-label">Оценка</label>
+        <select id="rating" name="rating" class="form-select" required>
+            <option value="5">Отлично</option>
+            <option value="4">Хорошо</option>
+            <option value="3">Удовлетворительно</option>
+            <option value="2">Неудовлетворительно</option>
+            <option value="1">Плохо</option>
+            <option value="0">Ужасно</option>
+        </select>
     </div>
     <div class="mb-3">
-        {{ form.text.label(class="form-label") }}
-        {{ form.text(class="form-control") }}
+        <label for="text" class="form-label">Рецензия</label>
+        <textarea id="text" name="text" class="form-control"></textarea>
     </div>
     <div class="mb-3">
-        {{ form.submit(class="btn btn-primary") }}
+        <button type="submit" class="btn btn-primary">Отправить</button>
     </div>
 </form>
 {% endblock %}

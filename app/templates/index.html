@@ -3,85 +3,97 @@
 {% block title %}Главная{% endblock %}
 
 {% block content %}
-<h1 class="mt-4">Список книг</h1>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Название</th>
-            <th>Жанры</th>
-            <th>Год</th>
-            <th>Средняя оценка</th>
-            <th>Количество рецензий</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for book in books.items %}
-        <tr>
-            <td>{{ book.title }}</td>
-            <td>
-                {% for genre in book.genres %}
-                    {{ genre.name }}{% if not loop.last %}, {% endif %}
+<div class="container mt-4">
+    <h1 class="mb-4">Список книг</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered border-dark table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Название</th>
+                    <th>Жанры</th>
+                    <th>Год</th>
+                    <th>Средняя оценка</th>
+                    <th>Количество рецензий</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books.items %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>
+                        {% for genre in book.genres %}
+                        {{ genre.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ book.year }}</td>
+                    <td>{{ book.average_rating|default('Нет оценок') }}</td>
+                    <td>{{ book.reviews|length }}</td>
+                    <td>
+                        <a href="{{ url_for('main.book', book_id=book.id) }}"
+                            class="btn btn-primary btn-sm">Просмотр</a>
+                        {% if current_user.is_authenticated and (current_user.role.name == 'Admin' or
+                        current_user.role.name == 'Moderator') %}
+                        <a href="{{ url_for('main.edit_book', book_id=book.id) }}"
+                            class="btn btn-warning btn-sm">Редактировать</a>
+                        {% endif %}
+                        {% if current_user.is_authenticated and current_user.role.name == 'Admin' %}
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete-modal"
+                            data-delete-url="{{ url_for('main.delete_book', book_id=book.id) }}"
+                            data-book-name="{{ book.title }}">Удалить</button>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% endfor %}
-            </td>
-            <td>{{ book.year }}</td>
-            <td>{{ book.average_rating|default('Нет оценок') }}</td>
-            <td>{{ book.reviews|length }}</td>
-            <td>
-                <a href="{{ url_for('main.book', book_id=book.id) }}" class="btn btn-primary btn-sm">Просмотр</a>
-                {% if current_user.is_authenticated and (current_user.role.name == 'Admin' or current_user.role.name == 'Moderator') %}
-                    <a href="{{ url_for('main.edit_book', book_id=book.id) }}" class="btn btn-warning btn-sm">Редактировать</a>
-                {% endif %}
-                {% if current_user.is_authenticated and current_user.role.name == 'Admin' %}
-                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-delete-url="{{ url_for('main.delete_book', book_id=book.id) }}" data-book-title="{{ book.title }}">Удалить</button>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
 
-<nav aria-label="Навигация по страницам">
-    <ul class="pagination">
-        {% if books.has_prev %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page=books.prev_num) }}">Предыдущая</a></li>
-        {% else %}
-            <li class="page-item disabled"><span class="page-link">Предыдущая</span></li>
-        {% endif %}
-        
-        {% for page_num in books.iter_pages() %}
-            {% if page_num %}
-                {% if page_num == books.page %}
-                    <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
-                {% else %}
-                    <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page=page_num) }}">{{ page_num }}</a></li>
-                {% endif %}
+    <nav aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center">
+            {% if books.has_prev %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('main.index', page=books.prev_num) }}">Предыдущая</a></li>
             {% else %}
-                <li class="page-item disabled"><span class="page-link">...</span></li>
+            <li class="page-item disabled"><span class="page-link">Предыдущая</span></li>
             {% endif %}
-        {% endfor %}
-        
-        {% if books.has_next %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page=books.next_num) }}">Следующая</a></li>
-        {% else %}
+
+            {% for page_num in books.iter_pages() %}
+            {% if page_num %}
+            {% if page_num == books.page %}
+            <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="{{ url_for('main.index', page=page_num) }}">{{ page_num
+                    }}</a></li>
+            {% endif %}
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            {% endfor %}
+
+            {% if books.has_next %}
+            <li class="page-item"><a class="page-link"
+                    href="{{ url_for('main.index', page=books.next_num) }}">Следующая</a></li>
+            {% else %}
             <li class="page-item disabled"><span class="page-link">Следующая</span></li>
-        {% endif %}
-    </ul>
-</nav>
+            {% endif %}
+        </ul>
+    </nav>
 
-{% if current_user.is_authenticated and current_user.role.name == 'Admin' %}
-    <a href="{{ url_for('main.add_book') }}" class="btn btn-success">Добавить книгу</a>
-{% endif %}
+    {% if current_user.is_authenticated and current_user.role.name == 'Admin' %}
+    <a href="{{ url_for('main.add_book') }}" class="btn btn-success mt-4">Добавить книгу</a>
+    {% endif %}
+</div>
 
-<div class="modal fade" id="deleteModal" tabindex="-1">
+<div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Удаление книги</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Удаление книги</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Вы уверены, что хотите удалить книгу "<span id="bookTitle"></span>"?
+                Вы уверены, что хотите удалить книгу "<span id="book-name"></span>"?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>

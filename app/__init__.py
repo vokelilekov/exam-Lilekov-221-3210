@@ -7,6 +7,7 @@ from config import Config
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
 login_manager.login_message_category = 'info'
+login_manager.login_message = 'Для выполнения данного действия необходимо пройти процедуру аутентификации.'
 
 def create_app():
     app = Flask(__name__)
@@ -28,4 +29,3 @@ def create_app():
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
-

@@ -1,16 +1,38 @@
-html, body {
+html,
+body {
     height: 100%;
 }
 
 body {
     display: flex;
     flex-direction: column;
+    font-family: 'Arial', sans-serif;
 }
 
 .container {
     flex: 1;
+    max-width: 960px;
+}
+
+.navbar {
+    margin-bottom: 20px;
 }
 
 footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 10px 0;
     flex-shrink: 0;
+}
+
+.table-responsive {
+    margin-bottom: 20px;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
+.modal-footer .btn {
+    margin-left: 10px;
 }
